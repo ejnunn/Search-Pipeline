@@ -8,23 +8,24 @@ Index a corpus of text documents and calculate the TF-IDF values for each term. 
 
 # Pipeline Stages Overview
 ## Term Count Stage (term_count/)
-* Mapper: Tokenizes documents and emits (term, 1) pairs.
-* Reducer: Sums term counts for each document.
+* Mapper: Tokenizes documents and combines the docid and terms. (docid+term, 1)
+* Reducer: Sums term counts for each document. (docid+term, term_count)
 
 ## Total Term Count Stage (total_term_count/)
-* Mapper: Reads documents and emits data to help compute the total number of terms per document.
-* Reducer: Sums the term counts to produce a total for each document.
+* Mapper: Reads documents and emits data to help compute the total number of terms per document. (docid, 1)
+* Reducer: Sums the term counts to produce a total for each document. (docid, term_count)
 
 ## Term Frequency (TF) Stage (tf/)
-* Mapper: Combines the term count and total term count to compute the TF (i.e. term frequency per document).
-* (There may be a reducer step to format or further aggregate these values.)
+* Mapper: Reads in the term_count output and emits docid, term counts. (docid, term, count)
+* Reducer: Sums up the docid term counts and divides by the total terms in each document (docid, term, TF)
 
 ## Document Frequency (DF) Stage (df/)
-* Mapper: (Updated version above) emits each unique term from a document along with the document ID.
-* Reducer: Aggregates to count in how many documents each term appears.
+* Mapper: Reads in term_count output and emits each unique term from a document along with the document ID. (term, docid)
+* Reducer: Aggregates the term and docid pairs to count in how many documents each term appears. (term, doc_count)
 
-## TF‑IDF Computation Stage (Not shown):
-This final stage (which might be an additional MapReduce job) joins the TF and DF outputs to compute the TF‑IDF score for each term in each document.
+## TF‑IDF Computation Stage (tfidf/):
+* Mapper: Reads both TF and DF outputs. Tags each entry to distinguish between TF and DF data. Emits (term, TF|DF, value)
+* Reducer: Joins the TF and DF data by term. For each entry, computes TF-IDF score. (docid+term, TF-IDF)
 
 
 # Running the Pipeline Locally
