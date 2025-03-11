@@ -22,6 +22,8 @@ cat output/term_counts.txt | python3 tf/mapper.py | sort | python3 tf/reducer.py
 
 
 # Run the DF Job
+echo "Running the Document Frequency (DF) Job"
+cat output/term_counts.txt | python3 df/mapper.py | sort | python3 df/reducer.py > output/df.txt
 
 
 # Compute TF-IDF
