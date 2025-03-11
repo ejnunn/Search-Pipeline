@@ -1,40 +1,40 @@
-#!/usr/bin/env python
-"""reducer.py"""
+#!/usr/bin/env python3
+"""total_term_count/reducer.py"""
 
-from operator import itemgetter
 import sys
 
 current_word = None
 current_count = 0
 word = None
 
-# input comes from STDIN
+# Input comes from STDIN
 for line in sys.stdin:
-    # remove leading and trailing whitespace
+    # Remove leading and trailing whitespace
     line = line.strip()
 
-    # parse the input we got from mapper.py
-    word, count = line.split('\t', 1)
+    # Parse the input we got from mapper.py
+    parts = line.split('\t', 1)
+    if len(parts) != 2:
+        continue  # Skip malformed lines
 
-    # convert count (currently a string) to int
+    word, count = parts
+
+    # Convert count (currently a string) to int
     try:
         count = int(count)
     except ValueError:
-        # count was not a number, so silently
-        # ignore/discard this line
-        continue
+        continue  # Ignore/discard invalid lines
 
-    # this IF-switch only works because Hadoop sorts map output
-    # by key (here: word) before it is passed to the reducer
+    # This works because Hadoop sorts map output by key (word) before passing to the reducer
     if current_word == word:
         current_count += count
     else:
-        if current_word:
-            # write result to STDOUT
-            print '%s\t%s' % (current_word, current_count)
+        if current_word is not None:
+            # Write result to STDOUT
+            print(f"{current_word}\t{current_count}")
         current_count = count
         current_word = word
 
-# do not forget to output the last word if needed!
+# Output the last word if needed
 if current_word == word:
-    print '%s\t%s' % (current_word, current_count)
+    print(f"{current_word}\t{current_count}")
