@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""term_count/reducer.py"""
+"""
+term_count/reducer.py
+
+Term count refers to the count of each term in each document.
+Identical terms from different documents represent separate term counts in this context.
+"""
 
 import sys
 

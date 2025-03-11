@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""total_term_count/reducer.py"""
+"""
+total_term_count/reducer.py
+
+Total term count refers to the total terms in each document.
+"""
 
 import sys
 

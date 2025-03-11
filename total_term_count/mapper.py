@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""total_term_count/mapper.py"""
+"""
+total_term_count/mapper.py
+
+Total term count refers to the total terms in each document.
+"""
 
 import sys
 import os
