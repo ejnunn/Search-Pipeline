@@ -8,6 +8,7 @@ import os
 docid = os.path.splitext(os.path.basename(os.getenv('map_input_file', 'unknown.txt')))[0]
 
 for line in sys.stdin.buffer.read().decode("utf-8", "replace").splitlines():
+    print(line)
     for word in line.strip().split():
         # Keep only alphabetic characters and convert to lowercase
         term = ''.join(c for c in word.lower() if 'a' <= c <= 'z')
