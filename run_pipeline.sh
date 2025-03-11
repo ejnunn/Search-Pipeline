@@ -17,6 +17,8 @@ for file in $corpus; do
 done > output/total_term_counts.txt
 
 # Run the TF Job
+echo "Running the Term Frequency (TF) Job"
+cat output/term_counts.txt | python3 tf/mapper.py | sort | python3 tf/reducer.py > output/tf.txt
 
 
 # Run the DF Job
