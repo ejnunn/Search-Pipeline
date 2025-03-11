@@ -1,35 +1,40 @@
 #!/usr/bin/env python
-"""reducer.py"""
+"""
+df/reducer.py
 
-from operator import itemgetter
+
+"""
+
 import sys
 
+current_term = None
 current_docid = None
 current_count = 0
-current_term = None
 
-# input comes from STDIN
+# Input comes from STDIN
 for line in sys.stdin:
-    # remove leading and trailing whitespace
     line = line.strip()
+    if not line:
+        continue  # Skip empty lines
 
-    # parse the input we got from mapper.py
+    # Parse the mapper output: term \t docid
     term, docid = line.split('\t', 1)
-    
-    # only count a unique docid
+
+    # Count unique docid entries for each term
     if term == current_term:
         if docid != current_docid:
             current_docid = docid
             current_count += 1
-    # once new term is read, print out previous term's unique docid count
     else:
+        # Output the previous term's DF count
         if current_term:
-            print '%s\t%s' % (current_term, current_count)
+            print(f"{current_term}\t{current_count}")
+        
+        # Start counting for the new term
         current_term = term
         current_docid = docid
         current_count = 1
-        
-    
-# do not forget to output the last term if needed!
-if term == current_term:
-    print '%s\t%s' % (current_term, current_count)
+
+# Output the final term's DF count
+if current_term:
+    print(f"{current_term}\t{current_count}")

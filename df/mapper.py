@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
-"""mapper.py"""
+"""
+df/mapper.py
+
+
+"""
 
 import sys
-import os
-
-# Extract document ID from filename
-docid = os.path.splitext(os.path.basename(os.getenv('map_input_file', 'unknown')))[0]
 
 for line in sys.stdin:
-    for word in line.strip().split():
-        lowered = word.lower()
-        term = ''.join(filter(str.isalpha, lowered))  # Keep only alphabetic characters
-        
-        if term:
-            print(f"{term}\t{docid}")
+    line = line.strip()
+    if not line:
+        continue  # Skip empty lines
+
+    docid_term, _ = line.split("\t")  # Extract docid+term
+    docid, term = docid_term.split("+")
+
+    # Emit (term, docid) once per occurrence in each document
+    print(f"{term}\t{docid}")
