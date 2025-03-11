@@ -19,10 +19,11 @@ def get_docid():
 
 docid = get_docid()
 
-for line in sys.stdin.buffer.read().decode("utf-8", "replace"):
+for line in sys.stdin.buffer.read().decode("utf-8", "ignore").splitlines():
     for word in line.strip().split():
         lowered = word.lower()
-        term = "".join(filter(lambda c: 97 <= ord(c) <= 122, lowered)) # Only lowercase a-z
+        term = "".join(filter(lambda c: 97 <= ord(c) <= 122, lowered))  # Only lowercase a-z
 
         if term and term not in stop_words:  # Filter out stop words
             print(f"{docid}+{term}\t1")
+
