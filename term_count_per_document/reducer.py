@@ -5,7 +5,7 @@ term_count_per_document/mapper.py
 Calculates the total terms in each document.
 
 Input: (docid, term, term_count)
-Output: (docid+term, term_count+terms_per_docid)
+Output: (docid+term, term_count, term_count_per_docid)
 """
 
 import sys
@@ -27,7 +27,7 @@ for line in sys.stdin:
 
     # Print when the key changes
     if current_key and current_key != key:
-        print(f"{current_key}\t{term_count}+{current_count}")
+        print(f"{current_key}\t{term_count}\t{current_count}")
 
     # Reset count only when the docid changes
     if current_docid != docid:
@@ -40,4 +40,4 @@ for line in sys.stdin:
 
 # Output the last key if needed
 if current_key:
-    print(f"{current_key}\t{term_count}+{current_count}")
+    print(f"{current_key}\t{term_count}\t{current_count}")

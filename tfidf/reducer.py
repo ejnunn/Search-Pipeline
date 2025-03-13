@@ -2,48 +2,46 @@
 """
 tfidf/reducer.py
 
-Input: word ((word, docid), (wordcount, wordperdoc))
-Output: ((word, docid), tf_idf)
+Input: (term, docid, term_count, term_count_per_docid)
+Output: (term+docid, tf_idf)
 """
 
 import sys
-from math import log
+import math
 
-N = int(sys.argv[1])  # Number of files in the corpus
+# Document frequency dictionary (to track how many docs contain each term)
+df_t = {}  # { term: document_count }
+doc_counts = []  # Stores each line to process later
+docid_set = set()  # Tracks unique document IDs for N
 
-current_term = None
-df_value = 0
-tf_entries = []  # Store TF entries until DF value is known
-
+# First pass — collect document frequency and track total documents (N)
 for line in sys.stdin:
     line = line.strip()
-    if not line:
-        continue
+    try:
+        term, docid, term_count, term_count_per_docid = line.split('\t')
+        term_count = int(term_count)
+        term_count_per_docid = int(term_count_per_docid)
+    except ValueError:
+        continue  # Ignore malformed lines
 
-    term, tag, value = line.split("\t") # e.g. (word, TF, 2)
+    doc_counts.append((term, docid, term_count, term_count_per_docid))
 
-    # New term — process the previous term's data
-    if term != current_term:
-        # Compute TF-IDF for the previous term
-        for tf_entry in tf_entries:
-            docid, tf = tf_entry.split("+")
-            tfidf = float(tf) * log(N / df_value)
-            print(f"{docid}+{current_term}\t{tfidf}")
-        
-        # Reset state for the new term
-        current_term = term
-        df_value = 0
-        tf_entries = []
+    # Track unique doc IDs for total document count
+    docid_set.add(docid)
 
-    # Store DF or TF data
-    if tag == "DF":
-        df_value = int(value)
-    elif tag == "TF":
-        tf_entries.append(value)
+    # Track document frequency
+    if term not in df_t:
+        df_t[term] = set()
+    df_t[term].add(docid)
 
-# Final term's data
-if current_term:
-    for tf_entry in tf_entries:
-        docid, tf = tf_entry.split("+")
-        tfidf = float(tf) * log(N / df_value)
-        print(f"{docid}+{current_term}\t{tfidf}")
+# Total number of documents
+N = len(docid_set)
+
+# Second pass — Calculate TF-IDF for each term in each document
+for term, docid, term_count, term_count_per_docid in doc_counts:
+    tf = term_count / term_count_per_docid
+    df = len(df_t[term])
+    idf = math.log(N / df) if df > 0 else 0  # Avoid division by zero
+    tfidf = tf * idf
+
+    print(f"({term}, {docid})\t{tfidf:.6f}")
