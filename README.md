@@ -80,7 +80,7 @@ This produces a file with document frequency counts for each term.
 
 
 ## Step F: Compute TF‑IDF
-Finally, you’ll need to combine tf_results.txt and df_results.txt (and possibly the total document count) in a final MapReduce job or a join script. This job would typically:
+Finally, you’ll need to combine tf_results.txt and df_results.txt (and the total document count) in a final MapReduce job or a join script. This job would typically:
 
 * Join on the term.
 * Compute the inverse document frequency (IDF) using a formula such as:
