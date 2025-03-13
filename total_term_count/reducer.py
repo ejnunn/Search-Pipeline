@@ -3,6 +3,9 @@
 total_term_count/reducer.py
 
 Total term count refers to the total terms in each document.
+
+Input: (docid, 1)
+Output: (docid, total_terms)
 """
 
 import sys

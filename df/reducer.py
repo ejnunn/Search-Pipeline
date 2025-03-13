@@ -3,6 +3,9 @@
 df/reducer.py
 
 Document Frequency (DF) refers to the number of documents each term appears in.
+
+Input: (term, docid)
+Output: (term, docid_count)
 """
 
 import sys

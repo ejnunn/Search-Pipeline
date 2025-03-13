@@ -30,5 +30,5 @@ for line in sys.stdin.buffer.read().decode("utf-8", "ignore").splitlines():
         term = "".join(filter(lambda c: 97 <= ord(c) <= 122, lowered))  # Only lowercase a-z
 
         if term and term not in stop_words:  # Filter out stop words
-            print(f"{docid}+{term}\t1")
+            print(f"{term}+{docid}\t1")
 

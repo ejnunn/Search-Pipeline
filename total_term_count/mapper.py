@@ -3,6 +3,9 @@
 total_term_count/mapper.py
 
 Total term count refers to the total terms in each document.
+
+Input: (docid+term, term_count)
+Output: (docid, 1)
 """
 
 import sys
